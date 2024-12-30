@@ -1,0 +1,88 @@
+# gateway configured a little differently.
+# this site  says to set registerWithEureka equal to false for gateway.
+# Hopefully this is consistent with the problem of registration not working with when using "web"
+# the "mvc" gateway.
+# https://codingstrain.com/spring-cloud-how-to-implement-service-discovery-part-i/
+
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://localhost:8761/eureka'
+    enabled: true
+    registerWithEureka: true
+    fetch-registry: true
+#    registryFetchIntervalSeconds: 1
+#    shouldDisableDelta: true
+#  instance:
+#    leaseRenewalIntervalInSeconds: 1
+#    leaseExpirationDurationInSeconds: 1
+
+
+
+server:
+  port: 9099
+
+debug: false
+management:
+  endpoint:
+    gateway:
+      enabled: true
+    env:
+      show-values: ALWAYS
+  endpoints:
+    web: 
+      exposure:
+        include: '*'
+#      base-path: /service-info/gateway/actuator
+
+
+info:
+  application:
+    name: "@project.name@"
+    description: "@project.description@"
+    version: "@project.version@"
+
+spring:
+  application:
+    name: gateway
+  cloud:     
+    gateway:
+      actuator:
+        verbose:
+          enabled: false
+      # mvc:
+      # add level mvc: (if using gateway-mvc, but this doesn't seem to work)
+      discovery:
+        locator:
+          enabled: true
+      routes:
+      - id: ignore-path
+        uri: no://op
+        predicates:
+        - Path=/ignored-path/**
+      - id: gateway
+        uri: lb://gateway
+        predicates:
+        - Path=/gateway/**
+        filters:
+        - StripPrefix=1
+      - id: hello1
+        uri: lb://hello1
+        predicates:
+        - Path=/hello1/**
+      - id: hello2
+        uri: lb://hello2
+        predicates:
+        - Path=/hello2/**
+
+# logging:
+#   level:
+#     reactor.netty.http.client: DEBUG
+#     com.netflix.eureka: DEBUG
+#     org.springframework.cloud: DEBUG
+#     org.springframework.cloud.gateway: DEBUG
+#     org.springframework.cloud.netflix.eureka: DEBUG
+
+
+spring.cloud.gateway.httpserver.wiretap: true
+spring.cloud.gateway.httpclient.wiretap: true

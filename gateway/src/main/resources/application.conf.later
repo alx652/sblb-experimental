@@ -1,0 +1,70 @@
+eureka: {
+  client: {
+    service-url: {
+      defaultZone: 'http://localhost:8761/eureka'
+    } 
+    enabled: true,
+    registerWithEureka: true,
+    fetch-registry: true
+  }
+}
+
+server.port: 9099
+
+management: {
+  endpoint: {
+    gateway: { enabled: true },  
+    env: { show-values: ALWAYS } 
+  }, 
+  endpoints: { 
+    web: {
+      exposure: { include: '*' },
+      base-path: { /service-info/gateway/actuator }
+    }
+  }
+}
+
+
+info.application: {
+    name: "@project.name@",
+    description: "@project.description@",
+    version: "@project.version@",
+}
+
+spring.application.name: gateway
+
+spring.cloud.gateway.mvc.actuator.verbose.enabled: true
+
+spring.cloud.gateway.mvc.actuator.verbose.enabled.discovery.locator.enabled: true
+spring.cloud.gateway.mvc.actuator.verbose.enabled.routes: [
+        {
+          "id": "gateway",
+          "uri": "lb://gateway/service-info/gateway",
+          "predicates": [
+            "Path=/service-info/gateway/**"
+          ]  
+        },
+        {
+          "id": "hello1",
+          "uri": "lb://hello1",
+          "predicates": [
+            "Path=/hello1/**"
+          ]
+          "filters": [
+            "StripPrefix=1"
+          ]
+        },
+        {
+          "id": "hello2",
+          "uri": "lb://hello2/hello2",
+          "predicates": [
+            "Path=/hello2/hello2/**"
+          ]
+        }
+]
+
+logging.level.reactor.netty.http.client: DEBUG
+logging.level.com.netflix.eureka: DEBUG
+logging.level.org.springframework.cloud: DEBUG
+logging.level.org.springframework.cloud.gateway: DEBUG
+logging.level.org.springframework.cloud.netflix.eureka: DEBUG
