@@ -6,8 +6,7 @@ Except for the gateway we use the context = <name of service> as a convention. T
 
 Here are some example urls (9999 is the gateway port)
 
-For some reason, I can only get the gateway to work with the reactive orientation. The '-web' starater does not work well with the gateway service.  The result is that for this service the Netty server is used.  I am not sure of the implications for a single tomcat deployment.
-
+For some reason, I can only get the gateway to work with the reactive orientation. The '-mvc' starter for the gateway does not work well with the discovery service in that registration fails.  The result is that for this service the Netty server is used.  I am not sure of the implications of Netty for/under a single tomcat deployment.
 
 ## discovery service 
 
