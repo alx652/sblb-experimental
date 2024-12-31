@@ -2,7 +2,7 @@
 
 In this project, I setup basic elements of a spring-boot 3.4.1 network including a discovery service and a gateway that works with load balancing (lb).
 
-Except for the gateway we use the context = <name of service> as a convention. This makes routing easier. 
+Except for the gateway we use the context = `name of service` as a convention. This makes routing easier. 
 
 Here are some example urls (9999 is the gateway port)
 
